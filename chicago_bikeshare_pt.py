@@ -193,21 +193,27 @@ def mean_trip_duration(trip_duration_data):
     return float(mean_trip / len(trip_duration_data))
 
 def median_trip_duration(trip_duration_data):
-    data = trip_duration_data
-    n = len(data)
-    i = n//2
-    print('{0} -- {1}'.format(data[i + 1],data[i + 2]))
-    if n%2 == 1:
-        return data[n//2]
+    """
+    Função para indicar o valor central de uma amostra de dados
+    Argumentos:
+        trip_duration_data: A lista contendo dados da viagem
+    """
+    data = list(map(float, trip_duration_data))
+    data.sort()
+    length = len(data)
+    if length%2 == 0:
+        left_side = int( length/2 - 1 )
+        right_side = int( length/2 )
+        median_trip = float(( int(data[left_side]) + int(data[right_side]) )/2 )
     else:
-        i = n//2
-        return (data[i + 1] - data[i + 2])/2
+        middle = int( length/2 )
+        median_trip = int( data[middle] )
+    return median_trip
 
 min_trip = min_trip(trip_duration_list) 
 max_trip = max_trip(trip_duration_list) 
 mean_trip = mean_trip_duration(trip_duration_list)
 median_trip = median_trip_duration(trip_duration_list)
-
 
 print("\nTAREFA 9: Imprimindo o mínimo, máximo, média, e mediana")
 print("Min: ", min_trip, "Max: ", max_trip, "Média: ", mean_trip, "Mediana: ", median_trip)
@@ -223,7 +229,7 @@ input("Aperte Enter para continuar...")
 # TAREFA 10
 # Gênero é fácil porque nós temos apenas algumas opções. E quanto a start_stations? Quantas opções ele tem?
 # TODO: Verifique quantos tipos de start_stations nós temos, usando set()
-user_types = set()
+user_types = set(column_to_list(data_list, 3))
 
 print("\nTAREFA 10: Imprimindo as start stations:")
 print(len(user_types))
