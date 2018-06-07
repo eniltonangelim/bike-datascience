@@ -28,8 +28,8 @@ input("Aperte Enter para continuar...")
 # TAREFA 1
 # TODO: Imprima as primeiras 20 linhas usando um loop para identificar os dados.
 print("\n\nTAREFA 1: Imprimindo as primeiras 20 amostras")
-for indice in range(1,21):
-    print(data_list[indice])
+for row in data_list[1:21]:
+    print(row)
 
 # Vamos mudar o data_list para remover o cabeçalho dele.
 data_list = data_list[1:]
@@ -43,8 +43,7 @@ input("Aperte Enter para continuar...")
 
 print("\nTAREFA 2: Imprimindo o gênero das primeiras 20 amostras")
 genero = 6
-for indice in range(0,20):
-    print(data_list[indice][genero])
+print([data[genero] for data in data_list[0:20]])
 
 # Ótimo! Nós podemos pegar as linhas(samples) iterando com um for, e as colunas(features) por índices.
 # Mas ainda é difícil pegar uma coluna em uma lista. Exemplo: Lista com todos os gêneros
@@ -52,8 +51,19 @@ for indice in range(0,20):
 input("Aperte Enter para continuar...")
 # TAREFA 3
 # TODO: Crie uma função para adicionar as colunas(features) de uma lista em outra lista, na mesma ordem
+# Dica: Você pode usar um for para iterar sobre as amostras, pegar a feature pelo seu índice, e dar append para uma lista
 def column_to_list(data, index):
-    # Dica: Você pode usar um for para iterar sobre as amostras, pegar a feature pelo seu índice, e dar append para uma lista   
+
+    """
+    Função para criar uma lista apartir da coluna (index) do conjunto de dados (data)
+
+    Argumentos:
+       data: Conjunto de dados usado para extrair a coluna (index)
+       index: Endereço da coluna que será usada para criar a nova lista
+    Retorna:
+       Uma lista usando apenas uma coluna da amostra de dados
+    """
+
     return [ d[index] for d in data ]
 
 
@@ -89,6 +99,16 @@ input("Aperte Enter para continuar...")
 # TODO: Crie uma função para contar os gêneros. Retorne uma lista.
 # Isso deveria retornar uma lista com [count_male, count_female] (exemplo: [10, 15] significa 10 Masculinos, 15 Femininos)
 def count_gender(data_list):
+
+    """
+    Função para contabilizar os gêneros do conjunto de dados
+
+    Argumentos:
+       data_list: Conjunto de dados
+    Retorna:
+       Uma lista com a quantidade de gênero Masculino e Feminino encontrados na amostra de dados
+    """
+
     male = len([genero for genero in column_to_list(data_list, -2) if genero == 'Male'])
     female = len([genero for genero in column_to_list(data_list, -2) if genero == 'Female'])
     return [male, female]
@@ -108,6 +128,16 @@ input("Aperte Enter para continuar...")
 # TODO: Crie uma função que pegue o gênero mais popular, e retorne este gênero como uma string.
 # Esperamos ver "Masculino", "Feminino", ou "Igual" como resposta.
 def most_popular_gender(data_list):
+
+    """
+    Função para classificar o gênero mais popular no conjunto de dados
+
+    Argumentos:
+        data_list: Amostra de dados
+    Retorna:
+        Uma string com a classificação do genero mais popular.
+    """
+
     male, female = count_gender(data_list)
     if male > female: answer = "Masculino"
     elif female > male: answer = "Feminino"
@@ -174,30 +204,63 @@ input("Aperte Enter para continuar...")
 # TODO: Ache a duração de viagem Mínima, Máxima, Média, e Mediana.
 # Você não deve usar funções prontas parTODO isso, como max() e min().
 trip_duration_list = column_to_list(data_list, 2)
+
+cast_to_float = lambda x: list(map(float, x))
+
 def max_trip(trip_duration_data):
-    max_trip = trip_duration_data[0]
-    for duration in trip_duration_data[1:]:
-        if float(duration) > float(max_trip): max_trip = duration
-    return float(max_trip)
+
+    """
+    Função para indicar o valor máximo de uma amostra de dados
+    Argumentos:
+        trip_duration_data: A lista contendo dados da viagem
+    Retorna:
+        O maior número float da amostra
+    """
+
+    data = cast_to_float(trip_duration_data)
+    data.sort()
+    return data[-1]
 
 def min_trip(trip_duration_data):
-    min_trip = trip_duration_data[0]
-    for duration in trip_duration_data[1:]:
-        if float(duration) < float(min_trip): min_trip = duration
-    return float(min_trip)
+
+    """
+    Função para indicar o valor minimo de uma amostra de dados
+    Argumentos:
+        trip_duration_data: A lista contendo dados da viagem
+    Retorna:
+        O menor número float da amostra
+    """
+
+    data = cast_to_float(trip_duration_data)
+    data.sort()
+    return data[0]
 
 def mean_trip_duration(trip_duration_data):
-    mean_trip = float(trip_duration_data[0])
-    for duration in trip_duration_data[1:]:
-        mean_trip += float(duration)
-    return float(mean_trip / len(trip_duration_data))
+
+    """
+    Função para indicar o valor da média de uma amostra de dados
+    Argumentos:
+        trip_duration_data: A lista contendo dados da viagem
+    Retorna:
+        A média entre os valores da amostra
+    """
+
+    data = cast_to_float(trip_duration_data)
+    data.sort()
+    total = sum(data)
+    length = len(data)
+    return total / length
 
 def median_trip_duration(trip_duration_data):
+
     """
     Função para indicar o valor central de uma amostra de dados
     Argumentos:
         trip_duration_data: A lista contendo dados da viagem
+    Retorna:
+        O valor central da amostra de dados
     """
+
     data = list(map(float, trip_duration_data))
     data.sort()
     length = len(data)
@@ -210,8 +273,8 @@ def median_trip_duration(trip_duration_data):
         median_trip = int( data[middle] )
     return median_trip
 
-min_trip = min_trip(trip_duration_list) 
-max_trip = max_trip(trip_duration_list) 
+min_trip = min_trip(trip_duration_list)
+max_trip = max_trip(trip_duration_list)
 mean_trip = mean_trip_duration(trip_duration_list)
 median_trip = median_trip_duration(trip_duration_list)
 
@@ -258,13 +321,14 @@ input("Aperte Enter para continuar...")
 # TODO: Crie uma função para contar tipos de usuários, sem definir os tipos
 # para que nós possamos usar essa função com outra categoria de dados.
 print("Você vai encarar o desafio? (yes ou no)")
-answer = "no"
+answer = "yes"
+
+filter_items = lambda x, y: [z for z in y if z == x]
 
 def count_items(column_list):
-    item_types = []
-    count_items = []
+    item_types = set(column_list)
+    count_items = [ len(filter_items(item, column_list)) for item in item_types  ]
     return item_types, count_items
-
 
 if answer == "yes":
     # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
